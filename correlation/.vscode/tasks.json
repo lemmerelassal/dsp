@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build correlation",
+        "type": "shell",
+        "command": "g++",
+        "args": ["-g", "-o", "correlation", "correlation.cpp"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
