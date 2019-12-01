@@ -9,17 +9,19 @@ using namespace std;
 
 // Correlation example where C++11 additions are used.
 
-bool correlation(const std::vector<double> x, const std::vector<double> y, int length, int offset, double &result) {
-    if((length < 1) || (offset >= length))
-        return false;
-    for(auto i=offset; i<length-offset; i++) // see what I did there? (auto)
-        result += x.at(i-offset) * y.at(i);
-    return true;
-}
-
 int main()
 {
     static_assert(__cplusplus > 201103L, "Minimum requirement missing: C++11");
+    double result = 0.0, peakValue = -INFINITY;
+
+    auto correlation = [&result](const std::vector<double> x, const std::vector<double> y, int length, int offset) -> bool { // lambda function; would rather pass 
+        if((length < 1) || (offset >= length))
+            return false;
+        result = 0.0;
+        for(auto i=offset; i<length-offset; i++) // automatic type assignment; couldn't think of a way to use range unfortunately
+            result += x.at(i-offset) * y.at(i);
+        return true;
+    };
 
     std::vector<double> x, y;
 
@@ -28,12 +30,10 @@ int main()
         y.push_back(cos(i*M_PI/180)); // could also use sin(((i+180)%360)*M_PI/180)
     }
 
-    double result = 0.0, peakValue = -INFINITY;
     int peakOffset = -1;
 
     for(int i=0; i<360; i++) {
-        result = 0.0;
-        if(correlation(x, y, x.size(), i, result)) {
+        if(correlation(x, y, x.size(), i)) {
             if(result > peakValue) {
                 peakValue = result;
                 peakOffset = i;
